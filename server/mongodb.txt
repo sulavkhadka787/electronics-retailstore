@@ -1,0 +1,1 @@
+/c/Users/sulav/mongodb/bin/mongod.exe --dbpath=/c/Users/sulav/mongodb-data
