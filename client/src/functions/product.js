@@ -6,3 +6,14 @@ export const createProduct=async(product,authtoken)=>
             authtoken
         }
     })
+
+export const getProductByCount=async(count)=>
+    await axios.get(`${process.env.REACT_APP_API}/products/${count}`);
+
+
+export const removeProduct = async (slug, authtoken) =>
+    await axios.delete(`${process.env.REACT_APP_API}/product/${slug}`, {
+      headers: {
+        authtoken,
+      },
+    });
