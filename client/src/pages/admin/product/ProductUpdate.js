@@ -29,6 +29,8 @@ const ProductUpdate=({match})=>{
     const [values,setValues]=useState(initialState);
     const [categories,setCategories]=useState([]);
     const [subOptions,setSubOptions]=useState([]);
+    const [arrayOfSubs,setArrayofSub]=useState([]);
+    const [selectedCategory,setSelectedCategory]=useState("");
 
     const {user}=useSelector((state)=>({...state}));
 
@@ -40,13 +42,26 @@ const ProductUpdate=({match})=>{
         loadCategories();
     },[]);
 
-    const loadProduct=()=>{
-        getProduct(slug)
-            .then(p=>{
-               // console.log('single product',p)
-               setValues({...values,...p.data});
-            })
-    }
+    
+    const loadProduct = () => {
+        getProduct(slug).then((p) => {
+          //console.log("single product", p);
+          // 1 load single proudct
+          setValues({ ...values, ...p.data });
+          // 2 load single product category subs
+        getCategorySubs(p.data.category._id).then((res) => {
+            setSubOptions(res.data); // on first load, show default subs
+        });
+        
+          // 3 prepare array of sub ids to show as default sub values in antd Select
+          let arr = [];
+          p.data.subs.map((s) => {
+            arr.push(s._id);
+          });
+          console.log("ARR", arr);
+          setArrayofSub((prev) => arr); // required for ant design select to work
+        });
+      };
 
     const loadCategories=()=>
         getCategories().then((c)=>{
@@ -66,13 +81,24 @@ const ProductUpdate=({match})=>{
 
     const handleCategoryChange=(e)=>{
         e.preventDefault();
-        console.log('Clicked Category',e.target.value);
-        setValues({...values,subs:[],category:e.target.value});
+        console.log('valuescategory',values.category._id);
+        setValues({...values,subs:[]});
+        setSelectedCategory(e.target.value);
         getCategorySubs(e.target.value)
             .then(res=>{
                 console.log("Sub Options on category click",res);
                 setSubOptions(res.data);
-            });
+        });
+
+        console.log('EXISTING CATEGORY values category',e.target.value);
+
+        //if user clicks back to the original category
+        //show it's sub categories in default
+        if(values.category._id===e.target.value){
+            loadProduct();
+        }
+        //clear old sub categories ids
+        setArrayofSub([]);
     }
 
     return(
@@ -95,6 +121,9 @@ const ProductUpdate=({match})=>{
                         handleCategoryChange={handleCategoryChange}
                         categories={categories}
                         subOptions={subOptions}
+                        arrayOfSubs={arrayOfSubs}
+                        setArrayofSub={setArrayofSub}
+                        selectedCategory={selectedCategory}
                     />
                 </div>
             </div>
