@@ -19,7 +19,7 @@ const ProductUpdateForm=({
 
     return(
         <form onSubmit={handleSubmit}>
-            {JSON.stringify(values)};
+           
                 <div className="form-group">
                     <label>Title</label>
                     <input type="text" name="title" className="form-control" value={title} onChange={handleChange}/>
