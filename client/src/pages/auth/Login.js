@@ -19,20 +19,34 @@ const Login=({history})=>{
     const {user}=useSelector((state)=>({...state}));
 
     useEffect(()=>{
-        if(user && user.token){
-            history.push("/")
+        let intended=history.location.state;
+        if(intended){
+            return;
+        }else{
+            if(user && user.token){
+                history.push("/")
+            }
         }
+       
     },[user,history]);
 
     let dispatch=useDispatch();
 
-    const roleBasedRedirect=(res)=>{
-        if(res.data.role==="admin"){
+    
+
+    const roleBasedRedirect = (res) => {
+        // check if intended
+        let intended = history.location.state;
+        if (intended) {
+          history.push(intended.from);
+        } else {
+          if (res.data.role === "admin") {
             history.push("/admin/dashboard");
-        }else{
+          } else {
             history.push("/user/history");
+          }
         }
-    }
+      };
 
     const handleSubmit=async (e)=>{
         e.preventDefault();
@@ -40,7 +54,7 @@ const Login=({history})=>{
        // console.log(email,password);
        try{
            const result=await auth.signInWithEmailAndPassword(email,password);
-           console.log(result);
+           //console.log(result);
            const {user}=result;
            const idTokenResult=await user.getIdTokenResult();
 

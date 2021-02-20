@@ -41,7 +41,7 @@ const App=()=> {
       if(user){
         const idTokenResult=await user.getIdTokenResult();
 
-        console.log("user",user);
+        //console.log("user",user);
         currentUser(idTokenResult.token)
             .then((res)=>{
                 dispatch({
