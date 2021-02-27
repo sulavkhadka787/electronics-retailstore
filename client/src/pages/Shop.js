@@ -3,9 +3,10 @@ import {
   getProductByCount,
   fetchProductsByFilter,
 } from "../functions/product";
+import {getCategories} from '../functions/category';
 import { useSelector, useDispatch } from "react-redux";
 import ProductCard from "../components/cards/ProductCard";
-import {Menu,Slider} from 'antd';
+import {Menu,Slider,Checkbox} from 'antd';
 import {DollarOutlined} from '@ant-design/icons';
 
 const {SubMenu,ItemGroup}=Menu;
@@ -15,6 +16,8 @@ const Shop = () => {
   const [loading, setLoading] = useState(false);
   const [price,setPrice]=useState([0,0]);
   const [ok,setOk]=useState(false);
+  const [categories,setCategories]=useState([]);
+  const [categoryIds,setCategoryIds]=useState([]);
 
   const dispatch=useDispatch();
 
@@ -23,6 +26,8 @@ const Shop = () => {
 
   useEffect(() => {
     loadAllProducts();
+    //fetch categories
+    getCategories().then((res)=>setCategories(res.data));
   }, []);
 
   const fetchProducts = (arg) => {
@@ -60,12 +65,52 @@ const Shop = () => {
       type:"SEARCH_QUERY",
       payload:{text:""}
     })
+    setCategoryIds([]);
     setPrice(value);
     setTimeout(()=>{
       setOk(!ok);
     },300)
   }
 
+  //4.load products based on category
+  //show categories in a list of  checkbox
+  const showCategories=()=>
+    categories.map((c)=>(
+      <div key={c._id}>
+        <Checkbox 
+          onChange={handleCheck} 
+          className="pb-2 pl-4 pr-4" 
+          value={c._id} 
+          name="category"
+          checked={categoryIds.includes(c._id)}
+          >
+            {c.name}
+          </Checkbox>
+      </div>
+    ));
+
+  const handleCheck=(e)=>{
+    dispatch({
+      type:"SEARCH_QUERY",
+      payload:{text:""}
+    });
+    setPrice([0,0]);
+    //  console.log(e.target.value);
+    let inTheState=[...categoryIds];
+    let justChecked=e.target.value;
+    let foundInTheState=inTheState.indexOf(justChecked);
+
+    //indexof method ?? if not found returns -1 else return index
+    if(foundInTheState === -1){
+      inTheState.push(justChecked);
+    }else{
+      //if found pull out one item from index
+      inTheState.splice(foundInTheState,1);
+    }
+    setCategoryIds(inTheState);
+    //console.log(inTheState);
+    fetchProducts({category:inTheState})
+  }
   return (
     <div className="container-fluid">
       <div className="row">
@@ -73,6 +118,7 @@ const Shop = () => {
           <h4>search/filter menu</h4>
           <hr/>
           <Menu defaultOpenKeys={["1","2"]} mode="inline">
+            {/* price */}
             <SubMenu key="1" 
               title={
               <span className="h6">
@@ -88,6 +134,18 @@ const Shop = () => {
                   onChange={handleSlider}
                   max="4999"
                   />
+              </div>
+            </SubMenu>
+
+            {/* Categories */}
+            <SubMenu key="2" 
+              title={
+              <span className="h6">
+                <DollarOutlined /> Categories
+                </span>
+            }>
+              <div style={{marginTop:"10px"}}>
+                {showCategories()}
               </div>
             </SubMenu>
           </Menu>
