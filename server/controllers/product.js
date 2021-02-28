@@ -200,36 +200,34 @@ exports.list = async (req, res) => {
     }
   }
 
-  const handleStar=(req,res,star)=>{
+
+  const handleStar = (req, res, stars) => {
     Product.aggregate([
       {
-        $project:{
-          document:"$$ROOT",
-          floorAverage:{
-            $floor:{$avg:"ratings.star"}
-          }
-        }
+        $project: {
+          document: "$$ROOT",
+          // title: "$title",
+          floorAverage: {
+            $floor: { $avg: "$ratings.star" }, // floor value of 3.33 will be 3
+          },
+        },
       },
-      {
-        $match:{floorAverage:stars}
-      }
+      { $match: { floorAverage: stars } },
     ])
-    .limit(12)
-    .exec((err,aggregates)=>{
-      if(err){
-        console.log('Aggregate error ',err);
-      }
-      console.log('Aggregates ids:',aggregates);
-      Product.find({_id:aggregates})
-      .populate("category","_id name")
-      .populate("subs","_id name")
-      .populate("postedBy","_id name")
-      .exec((err,products)=>{
-        if(err)console.log("Product aggregate error",err);
-        res.json(products);
+      .limit(12)
+      .exec((err, aggregates) => {
+        if (err) console.log("AGGREGATE ERROR", err);
+        console.log('id-agg',aggregates);
+        Product.find({ _id: aggregates })
+          .populate("category", "_id name")
+          .populate("subs", "_id name")
+          .populate("postedBy", "_id name")
+          .exec((err, products) => {
+            if (err) console.log("PRODUCT AGGREGATE ERROR", err);
+            res.json(products);
+          });
       });
-    })
-  }
+  };
 
   //search filter
   exports.searchFilters=async(req,res)=>{
