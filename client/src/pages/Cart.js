@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import {useSelector,useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
+import ProductCardInCheckout from "../components/cards/ProductCardInCheckout";
 
 const Cart=()=>{
 
@@ -12,6 +13,33 @@ const Cart=()=>{
             return currentValue+nextValue.count*nextValue.price;
         },0)
     }
+
+    const saveOrderToDb=()=>{
+        //
+    }
+
+    const showCartItems=()=>(
+        <table className="table table-bordered">
+            <thead className="thead-light">
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Color</th>
+                    <th scope="col">Count</th>
+                    <th scope="col">Shipping</th>
+                    <th scope="col">Remove</th>
+                </tr>
+            </thead>
+
+            {cart.map((p)=>(
+                <ProductCardInCheckout key={p._id} p={p} />
+            ))}
+
+        </table>
+    )
+
     useEffect(()=>{
         console.log('carttt',cart);
     },[])
@@ -20,7 +48,10 @@ const Cart=()=>{
             <div className="row">
                 <div className="col-md-8">
                     <h4>Cart/{cart.length} Products</h4>  
-                        {!cart.length ? (<p>No products in cart.<Link to="/shop">Continue Shopping</Link></p>):('show cart items')}
+                        {!cart.length ? (<p>No products in cart.<Link to="/shop">Continue Shopping</Link></p>
+                        ):(
+                        showCartItems()
+                        )}
                     </div>
                 <div className="col-md-4">
                     <h4>Order Summary</h4>
@@ -36,12 +67,21 @@ const Cart=()=>{
                     <hr/>
                     {
                         user ? (
-                            <button className="btn btn-sm btn-primary mt-2">
+                            <button 
+                                onClick={saveOrderToDb} 
+                                className="btn btn-sm btn-primary mt-2"
+                                disabled={!cart.length}
+                            >
                                 Process to Checkout
                             </button>
                         ):(
                             <button className="btn btn-sm btn-primary mt-2">
+                                <Link to={{
+                                    pathname:"/login",
+                                    state:{from:'cart'}
+                                }}>
                                 Login to Checkout
+                                </Link>
                             </button>
                         )
                     }

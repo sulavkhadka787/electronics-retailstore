@@ -63,7 +63,7 @@ const ProductCreate=()=>{
     
     const handleChange=(e)=>{
         setValues({...values,[e.target.name]:e.target.value});
-        //console.log(e.target.name,"======",e.target.value);
+        console.log(e.target.name,"======",e.target.value);
     }
 
     const handleCategoryChange=(e)=>{
