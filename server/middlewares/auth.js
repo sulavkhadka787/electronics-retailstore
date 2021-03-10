@@ -9,6 +9,7 @@ exports.authCheck=async (req,res,next)=>{
             .verifyIdToken(req.headers.authtoken);
             console.log("FIREBASE USER IN AUTHCHECK",firebaseUser);
             req.user=firebaseUser;
+            console.log('req-user-email',req.user.email)
             next();
     }catch(err){
         console.log(err);

@@ -16,7 +16,7 @@ const cartSchema=new mongoose.Schema({
     ],
     cartTotal:Number,
     totalAfterDiscount:Number,
-    orderedBy:{type:ObjectId,ref:"User"}
+    orderBy:{type:ObjectId,ref:"User"}
 },
 {timestamps:true}
 );
