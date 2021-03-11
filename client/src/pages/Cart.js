@@ -84,7 +84,7 @@ const Cart=({history})=>{
                                 className="btn btn-sm btn-primary mt-2"
                                 disabled={!cart.length}
                             >
-                                Process to Checkout
+                                Proceed to Checkout
                             </button>
                         ):(
                             <button className="btn btn-sm btn-primary mt-2">
