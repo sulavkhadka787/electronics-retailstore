@@ -27,3 +27,7 @@ exports.list=async(req,res)=>{
         console.log(err);
     }
 }
+
+exports.update=async(req,res)=>{
+    //
+}
