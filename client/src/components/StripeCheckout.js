@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom';
 import {Card} from 'antd';
 import {DollarOutlined,CheckOutlined} from '@ant-design/icons';
 import Laptop from '../images/laptop.png';
+import {createOrder,emptyUserCart} from '../functions/user';
 
 const StripeCheckout = ({ history }) => {
   const dispatch = useDispatch();
@@ -53,6 +54,27 @@ const StripeCheckout = ({ history }) => {
       setProcessing(false);
     }else{
       //
+      createOrder(payload,user.token).then((res)=>{
+        if(res.data.ok){
+          if(typeof window !=="undefined"){
+            localStorage.removeItem("cart")
+          }
+          //empty cart from redux
+          dispatch({
+            type:'ADD_TO_CART',
+            payload:[]
+          })
+
+          //reset coupon to false
+          dispatch({
+            type:'COUPON_APPLIED',
+            payload:false
+          });
+
+          //empty cart from database
+          emptyUserCart(user.token);
+        }
+      })
       console.log(JSON.stringify(payload,null,4));
       setError(null);
       setProcessing(false);
