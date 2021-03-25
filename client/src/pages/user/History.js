@@ -21,7 +21,7 @@ const History=()=>{
 
     return(
         <div className="container-fluid">
-        {JSON.stringify(orders)}
+        
             <div className="row">
                 <div className="col-md-2">
                     <UserNav />
