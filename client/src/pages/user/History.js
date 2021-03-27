@@ -1,7 +1,8 @@
 import React,{useState,useEffect} from 'react';
 import UserNav from "../../components/nav/UserNav";
+import ShowPamentInfo from '../../components/cards/ShowPaymentInfo';
 import {getUserOrders} from '../../functions/user';
-import {useSelector,useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {CheckCircleOutlined,CloseCircleOutlined} from '@ant-design/icons';
 import {toast} from 'react-toastify';
 
@@ -47,7 +48,7 @@ const History=()=>{
         </table>
     const showEachOrders=()=>orders.map((order,i)=>(
         <div key={i} className="m-5 p-3 card">
-                <p>Show Payment Info</p>
+                <ShowPamentInfo order={order}/>
                 {showOrderInTable(order)}
                 <div className="row">
                     <div className="col">
