@@ -81,6 +81,9 @@ const ProductCreate=()=>{
    
     return(
         <div className="container-fluid">
+        
+        {JSON.stringify(values.category)}
+
             <div className="row">
                 <div className="col-md-2">
                     <AdminNav />
