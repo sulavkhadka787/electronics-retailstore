@@ -174,6 +174,7 @@ exports.getUserCart = async (req, res) => {
 
   exports.wishlist=async(req,res)=>{
     const list=await User.findOne({email:req.user.email}).select('wishlist').populate('wishlist').exec();
+    res.json(list);
   }
 
   exports.removeFromWishlist=async(req,res)=>{
