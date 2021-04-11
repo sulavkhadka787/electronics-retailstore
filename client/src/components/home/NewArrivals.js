@@ -16,7 +16,10 @@ const NewArrivals=()=>{
 
 
     useEffect(() => {
-        getProductsCount().then((res) => setProductsCount(res.data));
+        getProductsCount().then((res) => {
+            setProductsCount(res.data)
+            console.log('getproductscount',productsCount)
+        });
       }, []);
     
 
@@ -31,6 +34,7 @@ const NewArrivals=()=>{
 
     return(
         <>
+       
             <div className="container">
             
                 {loading ? (
