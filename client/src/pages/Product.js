@@ -52,6 +52,7 @@ const Product=({match})=>{
 
     return(
         <>
+       
             <div className="container-fluid">
                 <div className="row pt-4">
                     <SingleProduct 
